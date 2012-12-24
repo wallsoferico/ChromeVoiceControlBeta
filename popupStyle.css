@@ -1,0 +1,81 @@
+body{
+	background-color:#FFFFFF;
+	background-image:url('popupBG2.png');
+	background-repeat:no-repeat;
+	background-position:52% 70%;
+	text-align: center;
+	font-family: helvetica, ariel, sans-serif;
+	font-size: 15px;
+	color:#ce191e;
+	overflow: hidden;
+	}
+table {
+	border-collapse:none;
+	border:1px solid #747170;
+}
+td {
+	text-align:center;
+	height:30px;
+	border-top: 1px solid #fbfbfb;
+	border-left: 1px solid #fbfbfb;
+	border-right: 1px solid #bfbfbf;
+	border-bottom: 2px solid #848484;
+}
+A:link {
+	font-size:15px;
+	color:#000000;
+	text-decoration:none;
+}
+h2 {
+	color:#000000;
+}
+div.TabView div.Tabs {
+ height:24px;
+ overflow:hidden;
+}
+div.TabView div.Tabs a {
+ float:left;
+ display:block;
+ width:137px; /* Width top main menu - Tab Buttons*/
+ text-align:center;
+ height:27px; /* Height top main menu - Tab Buttons*/
+ padding-top:3px;
+ vertical-align:middle;
+ border:1px solid #000; /*  border color of top main menu */
+ border-bottom-width:1px;
+ text-decoration:none;
+ font-family:"Times New Roman",  Serif; /*  font of top main menu */
+ font-weight:900;
+ color:#226fae; /*  font color of top main menu */
+ border-top: 1px solid #bbbbbb;
+ border-left: 1px solid #bbbbbb;
+ border-right: 2px solid #848484;
+ border-bottom: 2px solid #848484;
+}
+div.TabView div.Tabs a:hover {
+ background-color:#4cb849;
+ color:#FFFFFF;
+}
+div.TabView div.Tabs a.Active {
+ background-color:#fcd209;
+ color:#226fae;
+}
+div.TabView div.Tabs, div.TabView div.Tabs {
+ background-color:transparent; /* background color of the top main menu */
+}
+
+
+div.TabView div.Pages {
+ clear:both;
+ border:0px solid #6E6E6E; /*  Border color of the Content */
+ overflow:hidden;
+ background-color:transparent; /* Background color of the Content */
+}
+div.TabView div.Pages div.Page {
+ height:100%;
+ overflow:hidden;
+ padding:0;
+}
+div.TabView div.Pages div.Page div.Pad {
+ padding:3px 5px;
+}

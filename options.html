@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="popupStyle.css" />
+		<script type="text/javascript" src="./custCommands.js">	</script>
+		<script type="text/javascript" src="jquery-1.5.2.min.js"></script>
+		<script type="text/javascript" src="http://www.yourjavascript.com/1550971914/tabview.js"></script>
+		
+		
+	</head>
+
+		
+		<body>
+			<center>
+				<form action=" " method="get">
+					<div class="TabView" id="TabView">
+					<div class="Tabs" style="width: 425px; height: 70px;">
+						<a>Voice Input</a>
+						<a>Website Shortcuts</a>
+						<a>Map Commands</a><br><br>
+						<a>Browser Commands</a>
+						<a>Custom Commands</a>
+						<a>Credits</a>
+					</div>
+					<div class="Pages" style="width: 500px; height: 400px;">
+					<div class="Page">
+					<div class="Pad">
+						<h1>Press Microphone to Begin...</h1>
+							<!-- <input id="speechInput" type="text" style="font-size:25px;" x-webkit-speech onwebkitspeechchange="onChange()" />-->
+							<input id="speechInput" type="text" style="font-size:25px;" />
+							<input id="submit" type="submit" onclick="onChange()" />
+
+							<br /><br />
+							<b>The Current Language is: 
+							<select id="languages" onchange="javascript:setCommandLanguage(this.options[this.selectedIndex].value)">
+								<option value="en">English</option>
+								<option value="es">Spanish</option>
+								<option value="de">German</option>
+							</select></b>
+							
+							
+					</div>
+					</div>
+					<div class="Page">
+					<div class="Pad">
+						<center><h1>Website Shortcuts</h1>
+						<b>
+						(opens website in new tab)<br />
+				
+						Facebook<br />
+						Google<br />
+						Yahoo<br />
+						Twitter<br />
+						Flickr<br />
+						MSN<br />
+						Hotmail<br />
+						Digg<br /><br></b>
+						<script type="text/javascript">
+							printCommands();
+						</script>
+						</center>
+					</div>
+					</div>
+					<div class="Page">
+					<div class="Pad">
+						<center><h1>Map Commands</h1><b>
+						(please try and keep the listed format) <br />
+
+						Map Of [location] <br />
+						Get [thing] Near [location] <br />
+						Get Directions From [start address] to [destination address] <br /></b>
+						<center>
+					</div>
+					</div>
+					<div class="Page">
+					<div class="Pad">
+						<center><h1>Browser Commands</h1>
+						<b>
+						open new tab / new tab<br />
+						open new window / new window<br />
+						open incognito window <br />
+						open website in new tab [website name].com <br />
+						open website in new window [website name].com <br />
+						open tab in new window (will move current tab to a new window) <br />
+						open settings / edit settings / open options / edit options<br />
+						delete history<br />
+						delete [website name] from history <br />
+						launch [app or extension]<br />
+						disable / enable [app or extension]<br />
+						uninstall [app or extension]<br />
+						[app] options page<br />
+						store tab (pins current tab) <br />
+						remove stored tab (unpins current tab) <br />
+						close window<br />
+						close tab<br />
+						manage extensions<br />
+						search [search parameters] (does not recognize long phrases)<br />
+						go to [website name].com <br />
+						clear browsing data<br />	
+						<br><br>
+						</b>
+						</center>
+					</div>
+					</div>
+					<div class="Page">
+					<div class="Pad">
+						<center><h1>Create Custom Commands</h1>
+						<b>
+							<br><br>
+							Enter Website (ie: www.websitename.com): <input type="text" id="commandBox" size="50px"/>
+							<br><br>
+							Enter Custom Alias: <br><input type="text" id="aliasBox" size="50px"/>
+							<br><br>
+							<input type="submit" value="Create Command" onclick="javascript:submitCustCommand()" />
+							<br><br>
+							<input type="submit" value="Delete Alias and Website" onclick="javascript:deleteCustCommand()" />
+							<br>
+							(fill out at least one above field)
+							<br><br>
+							<input type="submit" value="Clear All Commands" onclick="javascript:clearCommands()" />
+						</b>
+					</div>
+					</div>
+					<div class="Page">
+					<div class="Pad">
+						<center><h1>Credits</h1>
+						<br><br><font size="3px">
+						<b>Developed and Supported by Eric Shaw<br><br>
+						Icon Created by Cristain<br><br>
+						Multi Tab View Created by NASIF via <br>
+						<a href="http://www.bdtechie.com/guide-to-create-tab-viewmultiple-tab.html">Multiple Tab Guide</a><br>
+						<br>
+						The Google Chrome Logo is a trademark of Google<br>
+						I have no association with them in any way<br>
+						</font></b>
+						</center>
+					</div>
+					</div>
+					</div>
+					</div>
+				</form>
+				<script type="text/javascript" >
+				
+				var currLang = "en";
+				
+				function httpGet(theUrl)
+    {
+    var xmlHttp = null;
+	alert("in httpGet");
+    xmlHttp = new XMLHttpRequest();
+	alert("after new XMLHTTPRequest()");
+    xmlHttp.open('POST', theUrl ,true);
+	alert("after open");
+    //xmlHttp.send(null);
+	alert("after Send");
+	alert(xmlHttp.responseText);
+    return xmlHttp.responseText;
+    }
+				
+				function setCommandLanguage(value) {
+					currLang = value.toLowerCase();
+					document.getElementById("speechInput").setAttribute('lang', currLang);
+				}
+				
+			var id;
+			
+			function trim (str) {
+				 return str.replace (/^\s+|\s+$/g, '');
+			}
+			
+			function onChange() {
+				var txt = document.getElementById('speechInput').value;
+				checkCustomCommands(trim(txt));
+			}
+			
+			function getAppId(value, task) {
+				chrome.management.getAll(function (results) {
+					for(var i = 0; i < results.length; i ++) {
+						if(results[i].name.toLowerCase().indexOf(value) >= 0) {
+							id = results[i].id;
+							break;
+						}
+					}
+					if(task == "disable")
+						disableApp(id);
+					else if(task == "enable")
+						enableApp(id);
+					else if(task == "uninstall")
+						uninstallApp(id);
+					else if(task == "launch")
+						launchApp(id);
+				});
+			}
+			
+			function disableApp(id) {
+				if(id != '') {
+					chrome.management.setEnabled(id, false);
+				}
+			}
+			
+			function enableApp(id) {
+				if(id != '') {
+					chrome.management.setEnabled(id, true);
+				}
+			}
+			
+			function uninstallApp(id) {
+				var r = confirm("Are you sure you want to uninstall" + value + "?");
+						
+				if(r == true) {
+					chrome.management.uninstall(id);
+				}
+			}
+			
+			function launchApp(id) {
+				chrome.management.getAll(function (result) {
+				
+				if(id != '')
+					chrome.management.launchApp(id);
+				else
+					alert("extension or app does not exist");
+				});
+			}
+			
+			function decide_command(value) {
+				if(value.indexOf("open") >=0 || value.indexOf("new") >= 0 || value.indexOf("edit") >= 0) {
+					if(value.indexOf("map") >= 0 || value.indexOf("directions") >= 0 || value.indexOf("near") >= 0) {
+						if(value.indexOf("map of") >= 0) {
+							value = value.substring(value.indexOf("of") + 3);
+							value = "http://maps.google.com/maps?q=" + value;
+							chrome.tabs.create({"url":value});
+						}
+					
+						else if(value.indexOf("get") >= 0 && value.indexOf("near") >= 0) {
+							var v = value.substring((value.indexOf("get") + 4), value.indexOf("near"));
+							var n = value.substring(value.indexOf("near") + 5);
+							value = "http://maps.google.com/maps?q=" + v + "near=" + n;
+							chrome.tabs.create({"url":value});
+						}
+					
+						else if(value.indexOf("get directions from") >= 0) {
+							var v = value.substring((value.indexOf("from") + 5), value.indexOf("to"));
+							value = "http://maps.google.com/?saddr=" + v + "&daddr=" + value.substring(value.indexOf("to") + 3);
+							chrome.tabs.create({"url":value});
+						}
+					}
+					
+					else {
+					
+						if(value == "open new tab" || value == "new tab") {
+							chrome.tabs.create({});
+						}
+				
+						else if(value == "open new window" || value == "new window") {
+							chrome.windows.create();
+						}
+						
+						else if(value == "open incognito window") {
+							chrome.windows.create({"incognito":true});
+						}
+					
+						else if(value.indexOf("open website") >= 0) {
+							if(value.indexOf("in new tab") >= 0) {
+								value = value.substring(value.indexOf("tab") + 4);
+							
+								if(value.indexOf("http://") < 0)
+									value = "http://" + value;
+						
+								chrome.tabs.create({"url":value});
+							}
+							else if (value.indexOf("in new window") >= 0) {
+								value = value.substring(value.indexOf("window") + 7);
+						
+								if(value.indexOf("http://") < 0) 
+									value = "http://" + value;
+						
+								chrome.windows.create({"url":value});
+							}
+						}
+					
+						else if(value == "open tab in new window" || value == "open tabs in new window") {
+							chrome.windows.getLastFocused(function (w) {
+								chrome.tabs.getSelected(w.id, function (t) {
+									chrome.windows.create({"tabId":t.id});
+								});
+							});
+						}
+					
+						else if(value == "open settings" || value == "open options" || value == "edit settings" || value == "edit options")
+							chrome.tabs.create({"url":"chrome://settings/browser"});
+				
+						else if(value == "open history") 
+							chrome.tabs.create({"url":"chrome://history/"});
+					}
+				}
+				
+				else if(value.indexOf("close") >= 0) {
+					if(value == "close tab") {
+						chrome.windows.getLastFocused(function (w) {
+							chrome.tabs.getSelected(w.id, function (t) {
+								chrome.tabs.remove(t.id);
+							});
+						});
+					}
+				
+					else if(value == "close window") {
+						chrome.windows.getLastFocused(function (w) {
+							chrome.windows.remove(w.id);
+						});
+					}
+				}
+				
+				else if(value.indexOf("translate") >= 0) {
+					var array = new Array("afrikaans", "af", "albanian", "sq", "arabic", "ar", "belarusian", "be", "bulgarian", "bg", "catalan", "ca", "chinese", "zh", "chinese simplified", "zh-CN", "chinese traditional", "zh-TW", "croation", "hr", "czech", "cs", "danish", "da", "dutch", "nl", "english", "en", "estonian", "et", "filipino", "tl", "finnish", "fi", "french", "fr", "galician", "gl", "german", "de", "greek", "el", "haitian creole", "ht", "hebrew", "iw", "hindi", "hi", "hungarian", "hu", "icelandic", "is", "indonesian", "id", "irish", "ga", "italian", "it", "japanese", "ja", "korean", "ko", "latvian", "lv", "lithuanian", "lt", "macedonian", "mk", "malay", "ms", "maltese", "mt", "norwegian", "no", "persian", "fa", "polish", "pl", "portuguese", "pt", "portuguese portugal", "pt-PT", "romanian", "ro", "russian", "ru", "serbian", "sr", "slovak", "sk", "slovenian", "sl", "spanish", "es", "swahili", "sw", "swedish", "sv", "tagalog", "tl", "thai", "th", "turkish", "tr", "ukrainian", "uk", "vietnamese", "vi", "welsh", "cy", "yiddish", "yi");
+					value = value.substring(value.indexOf("translate") + 10);
+					
+					lang = value.substring(value.lastIndexOf(" to ") + 4);
+					
+					value = value.substring(0, value.lastIndexOf(" to "));
+					
+					for(var a = 0; a < array.length; a+=2) {
+						if(array[a] == lang) {
+							value = "http://translate.google.com/#auto|" + array[a+1] + "|" + value;
+							alert("in translate for loop before get statement");
+							/*jQuery.get(value, function(results) {
+								alert("in get");
+								//alert(results.getElementById("results_box").value);
+								alert(results);
+							});*/
+							var pageHTML = httpGet(value);
+							alert("after");
+							//chrome.tabs.create({"url":value});
+						}
+					}
+				}
+				
+				else {
+					if (value == "manage extensions")
+						chrome.tabs.create({"url":"chrome://extensions"});
+						
+					else if(value == "store tab") {
+						chrome.windows.getLastFocused(function (w) {
+							chrome.tabs.getSelected(w.id, function (t) {
+								chrome.tabs.update(t.id, {"pinned":true});
+							});
+						});
+					}
+					
+					else if(value == "remove stored tab") {
+						chrome.windows.getLastFocused(function (w) {
+							chrome.tabs.getSelected(w.id, function (t) {
+								chrome.tabs.update(t.id, {"pinned":false});
+							});
+						});
+					}
+					
+					else if(value == "delete history") {
+						chrome.history.deleteAll(function () {});
+					}
+					
+					else if(value.indexOf("delete") >= 0 && value.indexOf("from history") >= 0) {
+						value = value.substring(value.indexOf("delete") + 7, value.indexOf("from history"));
+						
+						value = "http://www." + value;
+						
+						chrome.history.deleteURL({"url":value});
+					}
+					
+					else if(value.indexOf("search") >= 0) {
+						value = value.substring(value.indexOf("search") + 7);
+						value = "http://google.com/search?as_q=" + value;
+						
+						chrome.tabs.create({"url":value});
+					}
+				
+					else if(value.indexOf("go to") >= 0) {
+						value = value.substring(value.indexOf("go to") + 6);
+						
+						if(value.indexOf("http://") < 0)
+							value = "http://" + value;
+						
+						chrome.windows.getLastFocused(function (w) {
+							chrome.tabs.getSelected(w.id, function (t) {
+								chrome.tabs.update(t.id, {"url":value});
+							});
+						});
+					}
+				
+					else if(value.indexOf("goto") >= 0) {
+						value = value.substring(value.indexOf("goto") + 5);
+					
+						if(value.indexOf("http://") < 0)
+							value = "http://" + value;
+								
+						chrome.windows.getLastFocused(function (w) {
+							chrome.tabs.getSelected(w.id, function (t) {
+								chrome.tabs.update(t.id, {"url":value});
+							});
+						});
+					}
+					
+					else if(value.indexOf("launch") >= 0) {
+						value = value.substring(value.indexOf("launch") + 7);
+						
+						getAppId(value, "launch");
+					}
+					
+					else if(value.indexOf("disable") >= 0) {
+						value = value.substring(value.indexOf("disable") + 8);
+						
+						getAppId(value, "disable");
+						
+					}
+					
+					else if(value.indexOf("enable") >= 0) {
+						value = value.substring(value.indexOf("enable") + 7);
+						
+						getAppId(value, "enable");
+					}
+					
+					else if(value.indexOf("uninstall") >= 0) {
+						value = value.substring(value.indexOf("uninstall") + 10);
+						getAppId(value, "uninstall");
+					}
+					
+					else if(value.indexOf("options page") >= 0) {
+						value = value.substring(0, value.indexOf("options page"));
+						var options;
+						chrome.management.getAll(function (results) {
+							for(var i = 0; i < results.length; i ++) {
+								if(results[i].name.toLowerCase().indexOf(value) >= 0) {
+									options = results[i].optionsUrl;
+									break;
+								}
+							}
+						});
+						
+						chrome.windows.getLastFocused(function (w) {
+							chrome.tabs.create(w.id, {"url":options});
+						});
+						
+					}
+					
+					else if(value == "clear browsing data")
+						chrome.tabs.create({"url":"chrome://settings/clearBrowserData"});
+						
+					else if(value.indexOf(".com") >= 0) {
+						value = "http://" + value;
+						chrome.tabs.create({"url":value});
+					}
+					
+					else if(value == "facebook")
+						chrome.tabs.create({"url":"http://www.facebook.com/"});
+					else if(value == "google")
+						chrome.tabs.create({"url":"http://www.google.com/"});
+					else if(value == "yahoo")
+						chrome.tabs.create({"url":"http://www.yahoo.com/"});
+					else if(value == "twitter")
+						chrome.tabs.create({"url":"http://www.twitter.com/"});
+					else if(value == "flicker" || value == "flickr")
+						chrome.tabs.create({"url":"http://www.flickr.com/"});
+					else if(value == "msn")
+						chrome.tabs.create({"url":"http://www.msn.com/"});
+					else if(value == "hotmail")
+						chrome.tabs.create({"url":"http://www.hotmail.com/"});
+					else if(value == "dig" || value == "digg")
+						chrome.tabs.create({"url":"http://www.digg.com/"});
+				}
+				
+
+			}
+					
+					tabview_initialize('TabView');
+					
+					
+				</script>
+			</center> 
+			
+		</body>
+		
+		
+		
+		
+</html>
