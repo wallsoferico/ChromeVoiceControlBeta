@@ -1,8 +1,9 @@
 <html>
 	<head>
 		<script type="text/javascript">	
-			chrome.extension.onRequest.addListener(
+			chrome.extension.onMessage.addListener(
 				function(request, sender, onChange) {
+					alert("blah");
 					checkCustomCommands(request.command);
 				}
 			);

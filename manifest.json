@@ -1,8 +1,12 @@
 {
   "name": "Chrome Voice Control Beta",
+  "manifest_version": 2,
   "version": "4.3",
   "description": "Uses speech recognition to execute commands in Google Chrome",
-  "background_page":"background.html",
+  "background": {
+	"scripts": ["background.js"],
+	"persistent": false
+	},
   "browser_action" :
   {
     "default_icon" : "vc.png",
